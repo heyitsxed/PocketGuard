@@ -10,7 +10,9 @@ import SwiftUI
 
 class HomePageViewModel: ObservableObject {
     @Published var amounts: [Double] = UserDefaultsManager.shared.amounts
-    
+    private let storage = UserDefaultsManager.shared
+
+    @Published var isShowPopup: Bool = false
     @Published var selectedIndex: Int? = nil
     
     @Published var columns: [GridItem] = [
@@ -18,14 +20,4 @@ class HomePageViewModel: ObservableObject {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
-    private let storage = UserDefaultsManager.shared
-    
-    func addRectangle() {
-        let amount = Double.random(in: 10...100)
-        withAnimation(nil) {
-            amounts.append(amount)
-            storage.amounts = amounts
-        }
-    }
 }

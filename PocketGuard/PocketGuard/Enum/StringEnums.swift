@@ -10,4 +10,8 @@ enum StringEnums: String {
     case netWorth = "Net Worth"
     
     case savings = "Savings"
+    case enterAmount = "Enter Amount"
+    case defaultAmount = "0.00"
+    case cancel = "Cancel"
+    case save = "Save"
 }

@@ -61,12 +61,20 @@ struct HomePage: View {
                         }
                         
                         AddCardView {
-                            viewModel.addRectangle()
+                            withAnimation {
+                                viewModel.isShowPopup = true
+                            }
                         }
                     }
                     .padding(.horizontal, 15)
                 }
                 Spacer()
+            }
+            
+            if viewModel.isShowPopup {
+                CenterAmountPopup(isPresented: $viewModel.isShowPopup) { amount in
+                    viewModel.amounts.append(amount)
+                }
             }
         }
     }
