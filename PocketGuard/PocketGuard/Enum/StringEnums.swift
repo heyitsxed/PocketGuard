@@ -14,4 +14,6 @@ enum StringEnums: String {
     case defaultAmount = "0.00"
     case cancel = "Cancel"
     case save = "Save"
+    case saved = "Saved"
+    case hideAmount = "₱ ******"
 }

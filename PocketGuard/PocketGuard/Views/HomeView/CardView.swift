@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CardView: View {
+    let isAmountHidden: Bool
     let amount: Double
     let isCardViewTapped: (() -> Void)
     
@@ -15,10 +16,10 @@ struct CardView: View {
         ZStack {
             Color.white
             VStack {
-                Text(StringEnums.savings.rawValue)
+                Text(StringEnums.saved.rawValue)
                     .font(.system(size: 16, weight: .semibold))
                 
-                Text("₱\(String(format: "%.2f", amount))")
+                Text(isAmountHidden ? StringEnums.hideAmount.rawValue : "₱\(String(format: "%.2f", amount))")
                     .font(.system(size: 18, weight: .semibold))
                 
             }

@@ -29,18 +29,28 @@ struct HomePage: View {
                         Text(StringEnums.netWorth.rawValue)
                             .foregroundColor(.white)
                         
-                        Text("₱ \(String(format: "%.2f", viewModel.amounts.reduce(0, +)))")
+                        Text(viewModel.isAmountHidden ? StringEnums.hideAmount.rawValue : "₱ \(String(format: "%.2f", viewModel.amounts.reduce(0, +)))")
                             .foregroundColor(.white)
                             .font(.system(size: 30, weight: .bold))
                     }
                 }
                 .cornerRadius(20)
                 .padding(.horizontal, 15)
+                .overlay(alignment: .topTrailing) {
+                    Image(systemName: viewModel.isAmountHidden ? "eye.slash.fill" : "eye.fill")
+                        .foregroundColor(.white)
+                        .font(.system(size: 20))
+                        .padding(.trailing, 30)
+                        .padding(.top, 15)
+                        .onTapGesture {
+                            viewModel.isAmountHidden.toggle()
+                        }
+                }
                 
                 ScrollView {
                     LazyVGrid(columns: viewModel.columns, spacing: 10) {
                         ForEach(viewModel.amounts.indices, id: \.self) { index in
-                            CardView(amount: viewModel.amounts[index]) {
+                            CardView(isAmountHidden: viewModel.isAmountHidden, amount: viewModel.amounts[index]) {
                                 viewModel.selectedIndex = nil
                             }
                             .overlay(alignment: .topTrailing) {

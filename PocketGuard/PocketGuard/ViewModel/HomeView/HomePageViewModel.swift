@@ -13,6 +13,7 @@ class HomePageViewModel: ObservableObject {
     private let storage = UserDefaultsManager.shared
 
     @Published var isShowPopup: Bool = false
+    @Published var isAmountHidden: Bool = false
     @Published var selectedIndex: Int? = nil
     
     @Published var columns: [GridItem] = [
