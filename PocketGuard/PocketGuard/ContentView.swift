@@ -7,18 +7,30 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MainTabView:View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            HomePageView()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
+                }
+            
+            HomePageView()
+                .tabItem {
+                    Image(systemName: "dollarsign.circle")
+                    Text("Savings")
+                }
+            
+            HomePageView()
+                .tabItem {
+                    Image(systemName: "person.fill")
+                    Text("Profile")
+                }
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    MainTabView()
 }

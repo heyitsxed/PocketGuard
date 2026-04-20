@@ -1,0 +1,54 @@
+//
+//  CustomProgressBarView.swift
+//  PocketGuard
+//
+//  Created by Cedrick on 4/20/26.
+//
+
+import SwiftUI
+
+struct CustomProgressBarView: View {
+    let name: String
+    let progress: Double
+    let amount: Double
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            Image("")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .clipShape(.circle)
+                .overlay {
+                    Circle()
+                        .stroke(Color.blue ,style: StrokeStyle(lineWidth: 2))
+                }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("\(name)")
+                    .font(.subheadline)
+                
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(height: 12)
+                            .foregroundColor(Color.gray.opacity(0.3))
+                        
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: geometry.size.width * progress, height: 12)
+                            .foregroundColor(.blue)
+                            .animation(.easeInOut, value: progress)
+                    }
+                }
+                .frame(height: 12)
+                
+                Text("\(Int(progress * 100))% of ₱\(Text(amount, format: .number.precision(.fractionLength(2)))) saved")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+            }
+            .padding()
+        }
+    }
+}

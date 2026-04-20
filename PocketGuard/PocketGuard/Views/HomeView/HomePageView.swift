@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomePage: View {
+struct HomePageView: View {
     @ObservedObject private var viewModel = HomePageViewModel()
     
     var body: some View {
@@ -91,5 +91,5 @@ struct HomePage: View {
 }
 
 #Preview {
-    HomePage()
+    HomePageView()
 }
