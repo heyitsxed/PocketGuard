@@ -16,12 +16,10 @@ import SwiftUI
 
 struct SavingsView: View {
     @State var container: [SavingProfile] = []
+    @State private var isCreateNewGoal: Bool = false
     
     var body: some View {
-        VStack {
-            Text("My Goals")
-                .font(.title)
-            
+        NavigationStack {
             List(container) { item in
                 HStack {
                     CustomProgressBarView(name: item.name, progress: item.progress, amount: item.amount)
@@ -30,10 +28,28 @@ struct SavingsView: View {
             .listStyle(.insetGrouped)
             
             Button {
-                let randomGoal = SavingProfile(name: "testing", progress: 0.1, amount: 50000)
-                container.append(randomGoal)
+                isCreateNewGoal = true
             } label: {
-                Text("add goal")
+                Text(StringEnums.addGoal.rawValue)
+            }
+            .navigationTitle(StringEnums.myGoals.rawValue)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "person.fill")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Text(StringEnums.edit.rawValue)
+                        .font(.system(size: 17))
+                        .padding()
+                }
+            }
+            .fullScreenCover(isPresented: $isCreateNewGoal) {
+                CreateGoalView()
             }
         }
     }
