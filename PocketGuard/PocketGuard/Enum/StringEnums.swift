@@ -20,8 +20,8 @@ enum StringEnums: String {
     case addGoal = "add Goal"
     case myGoals = "My Goals"
     case edit = "Edit"
-    case goalInfo = "Goal Info"
-    case enterGoalName = "Enter goal name"
+    case growYourSavings = "Grow Your Savings"
+    case enterSavingName = "Enter saving name"
     case changeIcon = "Change Icon"
     
     case financialDetails = "Financial Details"
@@ -30,6 +30,7 @@ enum StringEnums: String {
     case pesoSign = "₱"
     case targetDate = "Target Date"
     case setATargetDate = "Set a target date"
-    case savedGoal = "Save Goal"
-    case newgoal = "New goal"
+    case savedPlan = "Add Saving Plan"
+    case newSavings = "New Savings"
+    case startSavingHere = "Start Saving Here"
 }

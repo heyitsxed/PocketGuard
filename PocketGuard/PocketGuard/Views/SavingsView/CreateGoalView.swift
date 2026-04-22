@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 
 struct CreateGoalView: View {
@@ -16,19 +17,55 @@ struct CreateGoalView: View {
     @State var savedAmount: Double?
     @State var selectedDate = Date()
     
+    @State var selectedItem: PhotosPickerItem?
+    @State var selectedImage: UIImage?
+    @State var showPicker: Bool = false
+    
     var body: some View {
         VStack {
             NavigationStack {
                 Form {
-                    Section(StringEnums.goalInfo.rawValue) {
-                        TextField(StringEnums.enterGoalName.rawValue, text: $name)
-                        
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.blue)
-                            .frame(width: 90, height: 90)
+                    Section(StringEnums.growYourSavings.rawValue) {
+                        HStack {
+                            VStack {
+                                if let image = selectedImage {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 90, height: 90)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                } else {
+                                    Image("wallet-icon")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 90, height: 90)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                                
+                                Button(StringEnums.changeIcon.rawValue) {
+                                    print("change icon")
+                                    showPicker = true
+                                }
+                                .photosPicker(isPresented: $showPicker, selection: $selectedItem, matching: .images)
+                                .onChange(of: selectedItem) { oldValue, newValue in
+                                    guard let item = newValue else { return }
+                                    Task {
+                                        if let data = try? await item.loadTransferable(type: Data.self),
+                                           let uiImage = UIImage(data: data) {
+                                            selectedImage = uiImage
+                                        }
+                                    }
+                                }
+                            }
                             
-                        Button(StringEnums.changeIcon.rawValue) {
-                            print("change icon")
+                            VStack(alignment: .leading) {
+                                Text(StringEnums.startSavingHere.rawValue)
+                                    .font(.system(size: 15, weight: .semibold, design: .default))
+                                    .foregroundColor(.gray)
+                                
+                                TextField(StringEnums.enterSavingName.rawValue, text: $name)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                            }
                         }
                     }
                     
@@ -56,7 +93,7 @@ struct CreateGoalView: View {
                     }
                     
                     HStack {
-                        Button(StringEnums.savedGoal.rawValue) {
+                        Button(StringEnums.savedPlan.rawValue) {
                             print("save goal")
                         }
                         .foregroundColor(.blue)
@@ -74,7 +111,7 @@ struct CreateGoalView: View {
                         }
                     }
                 }
-                .navigationTitle(StringEnums.newgoal.rawValue)
+                .navigationTitle(StringEnums.newSavings.rawValue)
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
