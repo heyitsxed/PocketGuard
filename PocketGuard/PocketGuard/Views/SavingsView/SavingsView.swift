@@ -18,6 +18,7 @@ import SwiftUI
 struct SavingsView: View {
     @State var container: [SavingProfile] = []
     @State private var isCreateNewGoal: Bool = false
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -27,33 +28,19 @@ struct SavingsView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            
-            Button {
-                isCreateNewGoal = true
-            } label: {
-                Text(StringEnums.addGoal.rawValue)
-            }
             .navigationTitle(StringEnums.myGoals.rawValue)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "person.fill")
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Text(StringEnums.edit.rawValue)
-                        .font(.system(size: 17))
-                        .padding()
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(isDarkMode ? .dark : .light)
             .fullScreenCover(isPresented: $isCreateNewGoal) {
                 CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
                     container.append(newGoal)
                     isCreateNewGoal = false
                 })
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "plus")
+                }
             }
         }
     }

@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct AddCardView: View {
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    
     var onAdd: () -> Void
     var body: some View {
         ZStack {
-            Color.gray.opacity(0.3)
+            isDarkMode ? Color.gray.opacity(0.3) : Color.black.opacity(0.3)
             
             Button {
                 onAdd()

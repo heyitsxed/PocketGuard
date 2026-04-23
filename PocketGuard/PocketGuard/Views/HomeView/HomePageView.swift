@@ -9,17 +9,14 @@ import SwiftUI
 
 struct HomePageView: View {
     @ObservedObject private var viewModel = HomePageViewModel()
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     
     var body: some View {
         ZStack {
-            Color.black
-                .opacity(0.9)
-                .ignoresSafeArea()
-            
             VStack(spacing: 10) {
                 Text(StringEnums.appTitle.rawValue)
                     .font(.title)
-                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
                 
                 ZStack {
                     Color.blue
@@ -87,6 +84,7 @@ struct HomePageView: View {
                 }
             }
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 

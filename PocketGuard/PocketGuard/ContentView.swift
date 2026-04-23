@@ -16,7 +16,7 @@ struct MainTabView:View {
                     Text("Home")
                 }
             
-            HomePageView()
+            SavingsView()
                 .tabItem {
                     Image(systemName: "dollarsign.circle")
                     Text("Savings")
