@@ -11,18 +11,23 @@ struct CustomProgressBarView: View {
     let name: String
     let progress: Double
     let amount: Double
+    let image: UIImage?
     
     var body: some View {
         HStack(spacing: 0) {
-            Image("")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .clipShape(.circle)
-                .overlay {
-                    Circle()
-                        .stroke(Color.blue ,style: StrokeStyle(lineWidth: 2))
-                }
+            if let image = image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .clipShape(.circle)
+            } else {
+                Image("wallet-icon")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 50, height: 50)
+                    .clipShape(.circle)
+            }
             
             VStack(alignment: .leading, spacing: 8) {
                 Text("\(name)")
@@ -46,7 +51,7 @@ struct CustomProgressBarView: View {
                 Text("\(Int(progress * 100))% of ₱\(Text(amount, format: .number.precision(.fractionLength(2)))) saved")
                     .font(.caption)
                     .foregroundColor(.gray)
-
+                
             }
             .padding()
         }

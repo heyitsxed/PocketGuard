@@ -10,6 +10,7 @@ struct SavingProfile: Identifiable {
     let name: String
     let progress: Double
     let amount: Double
+    let image: UIImage?
 }
 
 import SwiftUI
@@ -22,7 +23,7 @@ struct SavingsView: View {
         NavigationStack {
             List(container) { item in
                 HStack {
-                    CustomProgressBarView(name: item.name, progress: item.progress, amount: item.amount)
+                    CustomProgressBarView(name: item.name, progress: item.progress, amount: item.amount, image: item.image)
                 }
             }
             .listStyle(.insetGrouped)
@@ -49,7 +50,10 @@ struct SavingsView: View {
                 }
             }
             .fullScreenCover(isPresented: $isCreateNewGoal) {
-                CreateGoalView()
+                CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
+                    container.append(newGoal)
+                    isCreateNewGoal = false
+                })
             }
         }
     }

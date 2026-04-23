@@ -8,18 +8,18 @@
 import SwiftUI
 import PhotosUI
 
-
 struct CreateGoalView: View {
     @Environment(\.dismiss)  var dismiss
     
-    @State var name: String = ""
-    @State var amount: Double?
-    @State var savedAmount: Double?
+    @State var name: String
+    @State var amount: Double
+    @State var savedAmount: Double
     @State var selectedDate = Date()
     
     @State var selectedItem: PhotosPickerItem?
     @State var selectedImage: UIImage?
     @State var showPicker: Bool = false
+    @State var onSavePlan: ((SavingProfile) -> Void)?
     
     var body: some View {
         VStack {
@@ -94,7 +94,11 @@ struct CreateGoalView: View {
                     
                     HStack {
                         Button(StringEnums.savedPlan.rawValue) {
-                            print("save goal")
+                            let progress = amount == 0 ? 0 : savedAmount / amount
+                            let finalImage = selectedImage ?? UIImage(named: "wallet-icon")!
+                            let newSavedPlan = SavingProfile(name: name, progress: progress, amount: amount, image: finalImage)
+                            
+                            onSavePlan?(newSavedPlan)
                         }
                         .foregroundColor(.blue)
                         .frame(maxWidth: .infinity)
