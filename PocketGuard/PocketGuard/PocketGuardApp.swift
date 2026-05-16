@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct PocketGuardApp: App {
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

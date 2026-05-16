@@ -18,7 +18,6 @@ import SwiftUI
 struct SavingsView: View {
     @State var container: [SavingProfile] = []
     @State private var isCreateNewGoal: Bool = false
-    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -30,7 +29,6 @@ struct SavingsView: View {
             .listStyle(.insetGrouped)
             .navigationTitle(StringEnums.myGoals.rawValue)
             .navigationBarTitleDisplayMode(.inline)
-            .preferredColorScheme(isDarkMode ? .dark : .light)
             .fullScreenCover(isPresented: $isCreateNewGoal) {
                 CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
                     container.append(newGoal)

@@ -22,7 +22,7 @@ struct MainTabView:View {
                     Text("Savings")
                 }
             
-            HomePageView()
+            ProfileView()
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Profile")

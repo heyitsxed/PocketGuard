@@ -9,25 +9,42 @@ import SwiftUI
 
 struct ProfileView: View {
     @State var name: String = ""
+    @State var selectedImage: UIImage?
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
+            ZStack {
+                Color.blue
                 Spacer()
                 
-                Image(systemName: "person.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
+                if let image = selectedImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 90, height: 90)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .padding(.top, 30)
+                    
+                } else {
+                    Image("wallet-icon")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 90, height: 90)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .padding(.top, 30)
+                }
                 
                 Spacer()
             }
+            .ignoresSafeArea()
+            .frame(height: 150)
             
             Spacer()
             
             List {
                 Section(header: Text("Name")) {
-                    TextField("Name", text: $name)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    Text("Cedrick")
                 }
                 
                 Section(header: Text("Email")) {
@@ -42,17 +59,20 @@ struct ProfileView: View {
                     Text("123 Main St, City, Country")
                 }
                 
-                Section(header: Text("Social Media")) {
-                    Text("@Cedrick")
-                }
-                
-                Section(header: Text("Dark Mode")) {
-                    Text("Change Password")
+                Section(header: Text("Settings")) {
+                    HStack {
+                        Toggle("Dark Mode", isOn: $isDarkMode)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                        Text("Logout")
+                    }
                 }
             }
             
-            Spacer()
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 
