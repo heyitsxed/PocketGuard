@@ -38,6 +38,9 @@ struct SavingsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Image(systemName: "plus")
+                        .onTapGesture {
+                            isCreateNewGoal = true
+                        }
                 }
             }
         }

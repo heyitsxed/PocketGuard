@@ -18,8 +18,17 @@ struct CreateGoalView: View {
     
     @State var selectedItem: PhotosPickerItem?
     @State var selectedImage: UIImage?
-    @State var showPicker: Bool = false
     @State var onSavePlan: ((SavingProfile) -> Void)?
+    
+    @State var showPicker: Bool = false
+    @State var isEditingGoalAmount = false
+    @State var isEditingSavedAmount = false
+    
+    @State var goalAmountText: String = ""
+    @State var savedAmountText: String = ""
+    
+    @FocusState private var isEditingGoalAmountFocused: Bool
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack {
@@ -72,19 +81,57 @@ struct CreateGoalView: View {
                     Section(StringEnums.financialDetails.rawValue) {
                         HStack {
                             Text(StringEnums.pesoSign.rawValue)
-                                .fontWeight(.regular)
                             
-                            TextField(StringEnums.goalAmount.rawValue, value: $amount, format: .currency(code: "PHP"))
-                                .keyboardType(.numberPad)
+                            if isEditingGoalAmount {
+                                TextField(StringEnums.goalAmount.rawValue, text: $goalAmountText)
+                                    .keyboardType(.numberPad)
+                                    .focused($isEditingGoalAmountFocused)
+                                    .onAppear {
+                                        if goalAmountText.isEmpty {
+                                            goalAmountText = amount == 0 ? "" : String(format: "%.0f", amount)
+                                        }
+                                        
+                                        isEditingGoalAmountFocused = true
+                                    }
+                                    .onChange(of: goalAmountText) { oldValue, newValue in
+                                        amount = Double(newValue) ?? 0
+                                    }
+                            } else {
+                                Text(amount == 0 ? StringEnums.goalAmount.rawValue : "\(StringEnums.pesoSign.rawValue)\(amount)")
+                                    .foregroundColor(amount == 0 ? .gray : .primary)
+                                    .onTapGesture {
+                                        isEditingGoalAmount = true
+                                    }
+                            }
                         }
                         
                         HStack {
                             Text(StringEnums.pesoSign.rawValue)
-                                .fontWeight(.regular)
                             
-                            TextField(StringEnums.savedAmountOptional.rawValue, value: $savedAmount, format: .currency(code: "PHP"))
-                                .keyboardType(.numberPad)
-                        }
+                            if isEditingSavedAmount {
+                                TextField(StringEnums.savedAmountOptional.rawValue, text: $savedAmountText)
+                                    .keyboardType(.numberPad)
+                                    .focused($isFocused)
+                                    .onAppear {
+                                        savedAmountText = savedAmount == 0 ? "" : "\(savedAmount)"
+                                        isFocused = true
+                                    }
+                                    .onSubmit {
+                                        savedAmount = Double(savedAmountText) ?? 0
+                                        isEditingSavedAmount = false
+                                    }
+                                    .onChange(of: savedAmountText) { oldValue, newValue in
+                                        savedAmount = Double(newValue) ?? 0
+                                    }
+                                
+                            } else {
+                                Text(savedAmount == 0 ? StringEnums.savedAmountOptional.rawValue : "\(StringEnums.pesoSign.rawValue)\(savedAmount)")
+                                    .foregroundColor(savedAmount == 0 ? .gray : .primary)
+                                    .onTapGesture {
+                                        isEditingSavedAmount = true
+                                    }
+                            }
+                        }     .keyboardType(.numberPad)
                     }
                     
                     Section(StringEnums.targetDate.rawValue) {
@@ -97,6 +144,10 @@ struct CreateGoalView: View {
                             let progress = amount == 0 ? 0 : savedAmount / amount
                             let finalImage = selectedImage ?? UIImage(named: "wallet-icon")!
                             let newSavedPlan = SavingProfile(name: name, progress: progress, amount: amount, image: finalImage)
+                            
+                            guard !name.isEmpty, amount != 0, savedAmount <= amount else {
+                                return
+                            }
                             
                             onSavePlan?(newSavedPlan)
                         }
