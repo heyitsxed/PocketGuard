@@ -143,7 +143,12 @@ struct CreateGoalView: View {
                         Button(StringEnums.savedPlan.rawValue) {
                             let progress = amount == 0 ? 0 : savedAmount / amount
                             let finalImage = selectedImage ?? UIImage(named: "wallet-icon")!
-                            let newSavedPlan = SavingProfile(name: name, progress: progress, amount: amount, image: finalImage)
+                            let newSavedPlan = SavingProfile(
+                                name: name,
+                                progress: progress,
+                                amount: amount,
+                                saved: savedAmount,
+                                image: finalImage)
                             
                             guard !name.isEmpty, amount != 0, savedAmount <= amount else {
                                 return

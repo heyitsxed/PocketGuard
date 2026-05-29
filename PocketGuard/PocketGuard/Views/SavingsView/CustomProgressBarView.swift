@@ -9,10 +9,11 @@ import SwiftUI
 
 struct CustomProgressBarView: View {
     @State var isNavigate: Bool = false
-
+    
     let name: String
     let progress: Double
     let amount: Double
+    let savedAmount: Double
     let image: UIImage?
     
     var body: some View {
@@ -67,7 +68,12 @@ struct CustomProgressBarView: View {
             }
         }
         .navigationDestination(isPresented: $isNavigate) {
-            DetailView(navigationTitle: name, image: image, progress: progress)
+            DetailView(
+                saved: savedAmount,
+                target: amount,
+                navigationTitle: name,
+                image: image
+            )
         }
     }
 }

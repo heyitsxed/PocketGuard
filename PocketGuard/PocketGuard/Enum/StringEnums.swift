@@ -33,4 +33,10 @@ enum StringEnums: String {
     case savedPlan = "Add Saving Plan"
     case newSavings = "New Savings"
     case startSavingHere = "Start Saving Here"
+    
+    case recentTransactions = "Recent Transactions"
+    case savingProgress = "Savings Progress"
+    case added = "Added"
+    case withdrawn = "Withdrawn"
+    case complete = "complete"
 }
