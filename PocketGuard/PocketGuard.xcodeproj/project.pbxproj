@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		009C33FF2FCC6CDA00F547CC /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 009C33FE2FCC6CDA00F547CC /* Realm */; };
+		009C34012FCC6CDA00F547CC /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 009C34002FCC6CDA00F547CC /* RealmSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		001E28BA2F8D1C7A00810042 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				009C34012FCC6CDA00F547CC /* RealmSwift in Frameworks */,
+				009C33FF2FCC6CDA00F547CC /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = PocketGuard;
 			packageProductDependencies = (
+				009C33FE2FCC6CDA00F547CC /* Realm */,
+				009C34002FCC6CDA00F547CC /* RealmSwift */,
 			);
 			productName = PocketGuard;
 			productReference = 001E28AC2F8D1C7500810042 /* PocketGuard.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 001E28A32F8D1C7500810042;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				009C33FD2FCC6CDA00F547CC /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 001E28AD2F8D1C7500810042 /* Products */;
 			projectDirPath = "";
@@ -615,6 +627,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		009C33FD2FCC6CDA00F547CC /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = community;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		009C33FE2FCC6CDA00F547CC /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 009C33FD2FCC6CDA00F547CC /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		009C34002FCC6CDA00F547CC /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 009C33FD2FCC6CDA00F547CC /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 001E28A42F8D1C7500810042 /* Project object */;
 }
