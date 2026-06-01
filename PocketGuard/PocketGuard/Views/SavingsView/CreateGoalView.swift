@@ -10,6 +10,7 @@ import PhotosUI
 
 struct CreateGoalView: View {
     @Environment(\.dismiss)  var dismiss
+    @EnvironmentObject var vm: SavingsViewModel
     
     @State var name: String
     @State var amount: Double
@@ -143,18 +144,13 @@ struct CreateGoalView: View {
                         Button(StringEnums.savedPlan.rawValue) {
                             let progress = amount == 0 ? 0 : savedAmount / amount
                             let finalImage = selectedImage ?? UIImage(named: "wallet-icon")!
-                            let newSavedPlan = SavingProfile(
-                                name: name,
-                                progress: progress,
-                                amount: amount,
-                                saved: savedAmount,
-                                image: finalImage)
                             
                             guard !name.isEmpty, amount != 0, savedAmount <= amount else {
                                 return
                             }
                             
-                            onSavePlan?(newSavedPlan)
+                            vm.createGoal(name: name, amount: amount, saved: savedAmount, image: finalImage)
+                            dismiss()
                         }
                         .foregroundColor(.blue)
                         .frame(maxWidth: .infinity)

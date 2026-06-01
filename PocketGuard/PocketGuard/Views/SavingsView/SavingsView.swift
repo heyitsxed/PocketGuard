@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct SavingsView: View {
-    @State var container: [SavingProfile] = []
     @State private var isCreateNewGoal: Bool = false
+    @StateObject private var viewModel = SavingsViewModel()
     
     var body: some View {
         NavigationStack {
-            List(container) { item in
+            List(viewModel.profiles) { item in
                 HStack {
                     CustomProgressBarView(
                         name: item.name,
@@ -28,9 +28,9 @@ struct SavingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $isCreateNewGoal) {
                 CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
-                    container.append(newGoal)
+                    viewModel.profiles.append(newGoal)
                     isCreateNewGoal = false
-                })
+                }).environmentObject(viewModel)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

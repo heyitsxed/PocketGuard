@@ -6,6 +6,7 @@
 //
 
 import RealmSwift
+import UIKit
 
 final class TransactionService {
     
@@ -34,8 +35,24 @@ final class TransactionService {
         }
     }
     
+    func createProfile(name: String, amount: Double, saved: Double, image: UIImage?) throws {
+        let object = SavingProfileObject()
+        object.name = name
+        object.amount = amount
+        object.saved = saved
+        object.imageData = image?.jpegData(compressionQuality: 0.8)
+        
+        try realm.write {
+            realm.add(object)
+        }
+    }
+    
     func fetchTransactions() -> Results<SavingTransaction> {
         realm.objects(SavingTransaction.self)
             .sorted(byKeyPath: "createdAt", ascending: false)
+    }
+    
+    func fetchProfiles() -> Results<SavingProfileObject> {
+        realm.objects(SavingProfileObject.self)
     }
 }
