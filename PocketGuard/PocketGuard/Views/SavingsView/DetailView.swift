@@ -14,14 +14,14 @@ struct DetailView: View {
     @State var saved: Double
     @State var target: Double
     
-    @State private var transactions: [Transaction] = []
+    @StateObject private var vm = SavingsViewModel()
     
     let navigationTitle: String
     let image: UIImage?
     
     var progress: CGFloat {
         guard target > 0 else { return 0 }
-        return min(saved / target, 1)
+        return min(vm.balance / target, 1)
     }
     
     var body: some View {
@@ -58,7 +58,7 @@ struct DetailView: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
-                        Text("₱\(Text(saved, format: .number.precision(.fractionLength(2)))) saved")
+                        Text("₱\(Text(vm.balance, format: .number.precision(.fractionLength(2)))) saved")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -85,22 +85,8 @@ struct DetailView: View {
                     }
                     .padding(.horizontal)
                     
-                    ForEach(transactions.prefix(5)) { tx in
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(tx.type == .add ? StringEnums.added.rawValue : StringEnums.withdrawn.rawValue)
-                                    .font(.subheadline)
-                                
-                                Text(tx.date.formattedShort())
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            Spacer()
-                            
-                            Text("₱\(tx.amount, format: .number.precision(.fractionLength(2)))")
-                                .foregroundColor(tx.type == .add ? .green : .red)
-                        }
+                    ForEach(Array(vm.transactions.prefix(5)), id: \.id) { tx in
+                        TransactionRow(tx: tx)
                     }
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,29 +96,20 @@ struct DetailView: View {
                 }
                 .padding(.top)
             }
-            
+        }
+        .overlay {
             if isAddAmount {
                 CenterAmountPopup(isPresented: $isAddAmount) { addAmount in
-                    saved += addAmount
-                    
-                    transactions.insert(
-                        Transaction(amount: addAmount, type: .add),
-                        at: 0
-                    )
+                    vm.addDeposit(amount: addAmount)
                 }
-            }
-            
-            if isWithdrawAmount {
+            } else if isWithdrawAmount {
                 CenterAmountPopup(isPresented: $isWithdrawAmount) { withdrawAmount in
-                    let finalAmount = min(withdrawAmount, saved)
-                    saved -= finalAmount
-                    
-                    transactions.insert(
-                        Transaction(amount: finalAmount, type: .withdraw),
-                        at: 0
-                    )
+                    vm.addWithdrawal(amount: withdrawAmount)
                 }
             }
+        }
+        .onAppear {
+            vm.loadData()
         }
         .navigationTitle(navigationTitle)
     }

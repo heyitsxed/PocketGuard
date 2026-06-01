@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		00D740312FCD057E0015367A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 00D740302FCD057E0015367A /* RealmSwift */; };
+		00D740322FCD057E0015367A /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 00D740302FCD057E0015367A /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		001E28BA2F8D1C7A00810042 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -22,6 +27,20 @@
 			remoteInfo = PocketGuard;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		00D740332FCD057E0015367A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				00D740322FCD057E0015367A /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		001E28AC2F8D1C7500810042 /* PocketGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00D740312FCD057E0015367A /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +98,7 @@
 				001E28AE2F8D1C7500810042 /* PocketGuard */,
 				001E28BC2F8D1C7A00810042 /* PocketGuardTests */,
 				001E28C62F8D1C7A00810042 /* PocketGuardUITests */,
+				00D7402F2FCD057E0015367A /* Frameworks */,
 				001E28AD2F8D1C7500810042 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +113,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		00D7402F2FCD057E0015367A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +130,7 @@
 				001E28A82F8D1C7500810042 /* Sources */,
 				001E28A92F8D1C7500810042 /* Frameworks */,
 				001E28AA2F8D1C7500810042 /* Resources */,
+				00D740332FCD057E0015367A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -112,6 +141,7 @@
 			);
 			name = PocketGuard;
 			packageProductDependencies = (
+				00D740302FCD057E0015367A /* RealmSwift */,
 			);
 			productName = PocketGuard;
 			productReference = 001E28AC2F8D1C7500810042 /* PocketGuard.app */;
@@ -195,6 +225,9 @@
 			);
 			mainGroup = 001E28A32F8D1C7500810042;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				00D7402E2FCD05720015367A /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 001E28AD2F8D1C7500810042 /* Products */;
 			projectDirPath = "";
@@ -615,6 +648,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		00D7402E2FCD05720015367A /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = community;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00D740302FCD057E0015367A /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00D7402E2FCD05720015367A /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 001E28A42F8D1C7500810042 /* Project object */;
 }
