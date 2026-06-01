@@ -6,17 +6,15 @@
 //
 
 import Foundation
-import RealmSwift
 
-enum TransactionType: String, PersistableEnum {
-    case deposit
-    case withdrawal
+struct Transaction: Identifiable {
+    let id = UUID()
+    let amount: Double
+    let type: TransactionType
+    let date = Date()
 }
 
-class SavingTransaction: Object {
-    @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var amount: Double
-    @Persisted var type: TransactionType
-    @Persisted var createdAt: Date = Date()
-
+enum TransactionType {
+    case add
+    case withdraw
 }

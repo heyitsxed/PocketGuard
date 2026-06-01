@@ -15,7 +15,6 @@ struct DetailView: View {
     @State var target: Double
     
     @State private var transactions: [Transaction] = []
-    @StateObject private var vm = DetailViewModel()
     
     let navigationTitle: String
     let image: UIImage?
@@ -99,7 +98,7 @@ struct DetailView: View {
                             
                             Spacer()
                             
-                            Text("\(StringEnums.pesoSign.rawValue)\(tx.amount, format: .number.precision(.fractionLength(2)))")
+                            Text("₱\(tx.amount, format: .number.precision(.fractionLength(2)))")
                                 .foregroundColor(tx.type == .add ? .green : .red)
                         }
                     }
@@ -115,11 +114,11 @@ struct DetailView: View {
             if isAddAmount {
                 CenterAmountPopup(isPresented: $isAddAmount) { addAmount in
                     saved += addAmount
-                    vm.addDeposit()
-
-
-
-
+                    
+                    transactions.insert(
+                        Transaction(amount: addAmount, type: .add),
+                        at: 0
+                    )
                 }
             }
             
@@ -136,40 +135,5 @@ struct DetailView: View {
             }
         }
         .navigationTitle(navigationTitle)
-    }
-}
-
-
-import RealmSwift
-
-@MainActor
-class DetailViewModel: ObservableObject {
-    
-    @Published var transactions: [Transaction] = []
-    @Published var balance: Double = 0
-    
-    private let service = TransactionService()
-    
-    func loadData() {
-        let results = service.fetchTransactions()
-        
-        transactions = Array(results)
-        
-        balance = transactions.reduce(0) { result, transaction in
-            
-            switch transaction.type {
-            case .deposit:
-                return result + transaction.amount
-                
-            case .withdrawal:
-                return result - transaction.amount
-            }
-        }
-    }
-    
-    func addDeposit() {
-        try? service.addDeposit(amount: 1000)
-        
-        loadData()
     }
 }
