@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CustomProgressBarView: View {
-    @State var isNavigate: Bool = false
+    
+    @EnvironmentObject var vm: SavingsViewModel
+    @State private var isNavigate: Bool = false
     
     let name: String
     let progress: Double
@@ -74,6 +76,7 @@ struct CustomProgressBarView: View {
                 navigationTitle: name,
                 image: image
             )
+            .environmentObject(vm)
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import RealmSwift
 import UIKit
+import Realm
 
 final class TransactionService {
     
@@ -54,5 +55,16 @@ final class TransactionService {
     
     func fetchProfiles() -> Results<SavingProfileObject> {
         realm.objects(SavingProfileObject.self)
+    }
+    
+    func delete(_ item: SavingProfile) throws {
+        guard let object = realm.objects(SavingProfileObject.self)
+            .first(where: { $0.id.stringValue == item.id }) else {
+            return
+        }
+
+        try realm.write {
+            realm.delete(object)
+        }
     }
 }

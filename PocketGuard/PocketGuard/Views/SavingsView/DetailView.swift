@@ -14,14 +14,14 @@ struct DetailView: View {
     @State var saved: Double
     @State var target: Double
     
-    @StateObject private var vm = SavingsViewModel()
+    @EnvironmentObject var vm: SavingsViewModel
     
     let navigationTitle: String
     let image: UIImage?
     
     var progress: CGFloat {
         guard target > 0 else { return 0 }
-        return min(vm.balance / target, 1)
+        return min(saved / target, 1)
     }
     
     var body: some View {
@@ -58,7 +58,7 @@ struct DetailView: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
-                        Text("₱\(Text(vm.balance, format: .number.precision(.fractionLength(2)))) saved")
+                        Text("₱\(Text(saved, format: .number.precision(.fractionLength(2)))) saved")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
@@ -107,9 +107,6 @@ struct DetailView: View {
                     vm.addWithdrawal(amount: withdrawAmount)
                 }
             }
-        }
-        .onAppear {
-            vm.loadData()
         }
         .navigationTitle(navigationTitle)
     }

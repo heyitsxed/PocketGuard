@@ -39,4 +39,5 @@ enum StringEnums: String {
     case added = "Added"
     case withdrawn = "Withdrawn"
     case complete = "complete"
+    case delete = "Delete"
 }

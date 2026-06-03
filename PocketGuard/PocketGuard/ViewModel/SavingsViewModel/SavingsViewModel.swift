@@ -14,8 +14,9 @@ class SavingsViewModel: ObservableObject {
     
     @Published var transactions: [SavingTransaction] = []
     @Published var profiles: [SavingProfile] = []
-    @Published var balance: Double = 0
     
+    @Published var balance: Double = 0
+
     private let service = TransactionService()
     
     func loadData() {
@@ -58,6 +59,15 @@ class SavingsViewModel: ObservableObject {
     func createGoal(name: String, amount: Double, saved: Double, image: UIImage?) {
         do {
             try service.createProfile(name: name, amount: amount, saved: saved, image: image)
+            loadData()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func delete(_ item: SavingProfile) {
+        do {
+            try service.delete(item)
             loadData()
         } catch {
             print(error.localizedDescription)

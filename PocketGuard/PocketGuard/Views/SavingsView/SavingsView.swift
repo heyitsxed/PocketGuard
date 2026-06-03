@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct SavingsView: View {
-    @State private var isCreateNewGoal: Bool = false
     @StateObject private var viewModel = SavingsViewModel()
+    @State private var showDeleteAlert: Bool = false
+    @State private var isCreateNewGoal: Bool = false
     
     var body: some View {
         NavigationStack {
             List(viewModel.profiles) { item in
-                HStack {
-                    CustomProgressBarView(
-                        name: item.name,
-                        progress: item.progress,
-                        amount: item.amount,
-                        savedAmount: item.saved,
-                        image: item.image)
-                }
+                CustomProgressBarView(
+                    name: item.name,
+                    progress: item.progress,
+                    amount: item.amount,
+                    savedAmount: item.saved,
+                    image: item.image
+                )
+                .swipeActions(content: {
+                    Button(role: .destructive) {
+                        viewModel.delete(item)
+                    } label: {
+                        Label(StringEnums.delete.rawValue, systemImage: "trash")
+                    }
+                })
             }
             .listStyle(.insetGrouped)
             .navigationTitle(StringEnums.myGoals.rawValue)
@@ -30,17 +37,17 @@ struct SavingsView: View {
                 CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
                     viewModel.profiles.append(newGoal)
                     isCreateNewGoal = false
-                }).environmentObject(viewModel)
+                })
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Image(systemName: "plus")
-                        .onTapGesture {
-                            isCreateNewGoal = true
-                        }
+                        .onTapGesture { isCreateNewGoal = true }
                 }
             }
+            .task { viewModel.loadData() }
         }
+        .environmentObject(viewModel)
     }
 }
 
