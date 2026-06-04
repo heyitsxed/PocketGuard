@@ -13,7 +13,7 @@ final class TransactionService {
     
     private let realm = try! Realm()
     
-    func addDeposit(amount: Double) throws {
+    func addDeposit(amount: Double, to profile: SavingProfileObject) throws {
         let realm = try Realm()
 
         let transaction = SavingTransaction()
@@ -21,7 +21,8 @@ final class TransactionService {
         transaction.type = .deposit
 
         try realm.write {
-            realm.add(transaction)
+            profile.transactions.append(transaction)
+            profile.saved += amount
         }
     }
     
@@ -57,14 +58,12 @@ final class TransactionService {
         realm.objects(SavingProfileObject.self)
     }
     
-    func delete(_ item: SavingProfile) throws {
-        guard let object = realm.objects(SavingProfileObject.self)
-            .first(where: { $0.id.stringValue == item.id }) else {
-            return
-        }
+    func delete(id: ObjectId) throws {
+        guard let obj = realm.object(ofType: SavingProfileObject.self,
+                                     forPrimaryKey: id) else { return }
 
         try realm.write {
-            realm.delete(object)
+            realm.delete(obj)
         }
     }
 }

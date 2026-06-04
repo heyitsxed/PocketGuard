@@ -8,23 +8,21 @@
 import Combine
 import Foundation
 import UIKit
+import RealmSwift
 
 @MainActor
 class SavingsViewModel: ObservableObject {
-    
+    private let realm = try! Realm()
+
     @Published var transactions: [SavingTransaction] = []
-    @Published var profiles: [SavingProfile] = []
-    
+    @Published var profileObjects: [SavingProfileObject] = []
     @Published var balance: Double = 0
 
     private let service = TransactionService()
     
     func loadData() {
-        let results = service.fetchTransactions()
-        transactions = Array(results)
-        
         let objects = service.fetchProfiles()
-        profiles = objects.map(SavingProfile.init)
+        profileObjects = Array(objects)
         
         balance = transactions.reduce(0) { result, transaction in
             
@@ -38,9 +36,18 @@ class SavingsViewModel: ObservableObject {
         }
     }
     
-    func addDeposit(amount: Double) {
+    func balance(for profile: SavingProfileObject) -> Double {
+        profile.transactions.reduce(0) { result, tx in
+            switch tx.type {
+            case .deposit: return result + tx.amount
+            case .withdrawal: return result - tx.amount
+            }
+        }
+    }
+    
+    func addDeposit(amount: Double, to profile: SavingProfileObject) {
         do {
-            try service.addDeposit(amount: amount)
+            try service.addDeposit(amount: amount, to: profile)
             loadData()
         } catch {
             print(error.localizedDescription)
@@ -65,9 +72,9 @@ class SavingsViewModel: ObservableObject {
         }
     }
     
-    func delete(_ item: SavingProfile) {
+    func delete(_ item: SavingProfileObject) {
         do {
-            try service.delete(item)
+            try service.delete(id: item.id)
             loadData()
         } catch {
             print(error.localizedDescription)

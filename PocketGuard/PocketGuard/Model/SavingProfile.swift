@@ -16,6 +16,7 @@ class SavingProfileObject: Object {
     @Persisted var amount: Double
     @Persisted var saved: Double
     @Persisted var imageData: Data?
+    @Persisted var transactions = List<SavingTransaction>()
 }
 
 struct SavingProfile: Identifiable {
@@ -25,6 +26,7 @@ struct SavingProfile: Identifiable {
     let amount: Double
     let saved: Double
     let image: UIImage?
+    let transactions: [SavingTransaction]
 }
 
 extension SavingProfile {
@@ -35,5 +37,6 @@ extension SavingProfile {
         self.saved = object.saved
         self.progress = object.amount == 0 ? 0 : object.saved / object.amount
         self.image = object.imageData.flatMap { UIImage(data: $0) }
+        self.transactions = Array(object.transactions)
     }
 }

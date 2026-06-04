@@ -10,18 +10,21 @@ import SwiftUI
 struct CustomProgressBarView: View {
     
     @EnvironmentObject var vm: SavingsViewModel
+    
     @State private var isNavigate: Bool = false
     
-    let name: String
-    let progress: Double
-    let amount: Double
-    let savedAmount: Double
-    let image: UIImage?
+    let profile: SavingProfileObject
+    
+    var progress: Double {
+        guard profile.amount > 0 else { return 0 }
+        return profile.saved / profile.amount
+    }
     
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
-                if let image = image {
+                if let data = profile.imageData,
+                   let image = UIImage(data: data) {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -36,7 +39,7 @@ struct CustomProgressBarView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(name)")
+                    Text("\(profile.name)")
                         .font(.subheadline)
                     
                     GeometryReader { geometry in
@@ -54,7 +57,7 @@ struct CustomProgressBarView: View {
                     }
                     .frame(height: 12)
                     
-                    Text("\(Int(progress * 100))% of ₱\(Text(amount, format: .number.precision(.fractionLength(2)))) saved")
+                    Text("\(Int(progress * 100))% of ₱\(Text(profile.amount, format: .number.precision(.fractionLength(2)))) saved")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
@@ -71,10 +74,9 @@ struct CustomProgressBarView: View {
         }
         .navigationDestination(isPresented: $isNavigate) {
             DetailView(
-                saved: savedAmount,
-                target: amount,
-                navigationTitle: name,
-                image: image
+                navigationTitle: profile.name,
+                image: profile.imageData.flatMap { UIImage(data: $0) },
+                profile: profile
             )
             .environmentObject(vm)
         }

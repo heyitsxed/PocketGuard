@@ -14,17 +14,11 @@ struct SavingsView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.profiles) { item in
-                CustomProgressBarView(
-                    name: item.name,
-                    progress: item.progress,
-                    amount: item.amount,
-                    savedAmount: item.saved,
-                    image: item.image
-                )
+            List(viewModel.profileObjects, id: \.id) { profile in
+                CustomProgressBarView(profile: profile)
                 .swipeActions(content: {
                     Button(role: .destructive) {
-                        viewModel.delete(item)
+                        viewModel.delete(profile)
                     } label: {
                         Label(StringEnums.delete.rawValue, systemImage: "trash")
                     }
@@ -34,10 +28,12 @@ struct SavingsView: View {
             .navigationTitle(StringEnums.myGoals.rawValue)
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $isCreateNewGoal) {
-                CreateGoalView(name: "", amount: 0, savedAmount: 0, onSavePlan: { newGoal in
-                    viewModel.profiles.append(newGoal)
-                    isCreateNewGoal = false
-                })
+                CreateGoalView(
+                    name: "",
+                    amount: 0,
+                    savedAmount: 0
+                )
+                .environmentObject(viewModel)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

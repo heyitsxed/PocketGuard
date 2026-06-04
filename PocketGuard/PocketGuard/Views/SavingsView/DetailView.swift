@@ -11,13 +11,19 @@ struct DetailView: View {
     @State var isAddAmount: Bool = false
     @State var isWithdrawAmount: Bool = false
     
-    @State var saved: Double
-    @State var target: Double
+    var saved: Double {
+        profile.saved
+    }
+    
+    var target: Double {
+        profile.amount
+    }
     
     @EnvironmentObject var vm: SavingsViewModel
     
     let navigationTitle: String
     let image: UIImage?
+    let profile: SavingProfileObject
     
     var progress: CGFloat {
         guard target > 0 else { return 0 }
@@ -85,7 +91,7 @@ struct DetailView: View {
                     }
                     .padding(.horizontal)
                     
-                    ForEach(Array(vm.transactions.prefix(5)), id: \.id) { tx in
+                    ForEach(Array(profile.transactions.prefix(5)), id: \.id) { tx in
                         TransactionRow(tx: tx)
                     }
                     .padding(.horizontal)
@@ -100,7 +106,7 @@ struct DetailView: View {
         .overlay {
             if isAddAmount {
                 CenterAmountPopup(isPresented: $isAddAmount) { addAmount in
-                    vm.addDeposit(amount: addAmount)
+                    vm.addDeposit(amount: addAmount, to: profile)
                 }
             } else if isWithdrawAmount {
                 CenterAmountPopup(isPresented: $isWithdrawAmount) { withdrawAmount in
