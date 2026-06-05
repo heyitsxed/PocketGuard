@@ -50,11 +50,6 @@ final class TransactionService {
         }
     }
     
-    func fetchTransactions() -> Results<SavingTransaction> {
-        realm.objects(SavingTransaction.self)
-            .sorted(byKeyPath: "createdAt", ascending: false)
-    }
-    
     func fetchProfiles() -> Results<SavingProfileObject> {
         realm.objects(SavingProfileObject.self)
     }

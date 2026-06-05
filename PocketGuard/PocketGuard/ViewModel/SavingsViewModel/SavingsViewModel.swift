@@ -14,36 +14,15 @@ import SwiftUI
 @MainActor
 class SavingsViewModel: ObservableObject {
     private let realm = try! Realm()
-
-    @Published var transactions: [SavingTransaction] = []
+    
     @Published var profileObjects: [SavingProfile] = []
     @Published var balance: Double = 0
-
+    
     private let service = TransactionService()
     
     func loadData() {
         let objects = service.fetchProfiles()
         profileObjects = objects.map { SavingProfile(object: $0) }
-        
-        balance = transactions.reduce(0) { result, transaction in
-            
-            switch transaction.type {
-            case .deposit:
-                return result + transaction.amount
-                
-            case .withdrawal:
-                return result - transaction.amount
-            }
-        }
-    }
-    
-    func balance(for profile: SavingProfileObject) -> Double {
-        profile.transactions.reduce(0) { result, tx in
-            switch tx.type {
-            case .deposit: return result + tx.amount
-            case .withdrawal: return result - tx.amount
-            }
-        }
     }
     
     func addDeposit(amount: Double, to profile: SavingProfile) {

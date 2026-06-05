@@ -8,8 +8,19 @@
 import SwiftUI
 
 struct DetailView: View {
+    @EnvironmentObject var vm: SavingsViewModel
+    
     @State var isAddAmount: Bool = false
     @State var isWithdrawAmount: Bool = false
+    
+    let profile: SavingProfile
+    let navigationTitle: String
+    let image: UIImage?
+    
+    var progress: CGFloat {
+        guard target > 0 else { return 0 }
+        return min(saved / target, 1)
+    }
     
     var saved: Double {
         profile.saved
@@ -17,17 +28,6 @@ struct DetailView: View {
     
     var target: Double {
         profile.amount
-    }
-    
-    @EnvironmentObject var vm: SavingsViewModel
-    
-    let navigationTitle: String
-    let image: UIImage?
-    let profile: SavingProfile
-    
-    var progress: CGFloat {
-        guard target > 0 else { return 0 }
-        return min(saved / target, 1)
     }
     
     var body: some View {

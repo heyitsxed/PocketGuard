@@ -37,6 +37,6 @@ extension SavingProfile {
         self.saved = object.saved
         self.progress = object.amount == 0 ? 0 : object.saved / object.amount
         self.image = object.imageData.flatMap { UIImage(data: $0) }
-        self.transactions = Array(object.transactions)
+        self.transactions = object.transactions.sorted(by: { $0.createdAt > $1.createdAt })
     }
 }
