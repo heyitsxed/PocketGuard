@@ -14,7 +14,7 @@ struct SavingsView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.profileObjects, id: \.id) { profile in
+            List(viewModel.profileObjects) { profile in
                 CustomProgressBarView(profile: profile)
                 .swipeActions(content: {
                     Button(role: .destructive) {

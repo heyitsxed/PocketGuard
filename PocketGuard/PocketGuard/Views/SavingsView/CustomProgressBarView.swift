@@ -13,7 +13,7 @@ struct CustomProgressBarView: View {
     
     @State private var isNavigate: Bool = false
     
-    let profile: SavingProfileObject
+    let profile: SavingProfile
     
     var progress: Double {
         guard profile.amount > 0 else { return 0 }
@@ -23,8 +23,7 @@ struct CustomProgressBarView: View {
     var body: some View {
         NavigationStack {
             HStack(spacing: 0) {
-                if let data = profile.imageData,
-                   let image = UIImage(data: data) {
+                if let image = profile.image {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -75,7 +74,7 @@ struct CustomProgressBarView: View {
         .navigationDestination(isPresented: $isNavigate) {
             DetailView(
                 navigationTitle: profile.name,
-                image: profile.imageData.flatMap { UIImage(data: $0) },
+                image: profile.image,
                 profile: profile
             )
             .environmentObject(vm)

@@ -26,14 +26,15 @@ final class TransactionService {
         }
     }
     
-    func addWithdrawal(amount: Double) throws {
+    func addWithdrawal(amount: Double, to profile: SavingProfileObject) throws {
         let transaction = SavingTransaction()
         
         transaction.amount = amount
         transaction.type = .withdrawal
         
         try realm.write {
-            realm.add(transaction)
+            profile.transactions.append(transaction)
+            profile.saved -= amount
         }
     }
     
@@ -59,8 +60,7 @@ final class TransactionService {
     }
     
     func delete(id: ObjectId) throws {
-        guard let obj = realm.object(ofType: SavingProfileObject.self,
-                                     forPrimaryKey: id) else { return }
+        guard let obj = realm.object(ofType: SavingProfileObject.self, forPrimaryKey: id) else { return }
 
         try realm.write {
             realm.delete(obj)

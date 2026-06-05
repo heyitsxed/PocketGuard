@@ -9,20 +9,21 @@ import Combine
 import Foundation
 import UIKit
 import RealmSwift
+import SwiftUI
 
 @MainActor
 class SavingsViewModel: ObservableObject {
     private let realm = try! Realm()
 
     @Published var transactions: [SavingTransaction] = []
-    @Published var profileObjects: [SavingProfileObject] = []
+    @Published var profileObjects: [SavingProfile] = []
     @Published var balance: Double = 0
 
     private let service = TransactionService()
     
     func loadData() {
         let objects = service.fetchProfiles()
-        profileObjects = Array(objects)
+        profileObjects = objects.map { SavingProfile(object: $0) }
         
         balance = transactions.reduce(0) { result, transaction in
             
@@ -45,19 +46,27 @@ class SavingsViewModel: ObservableObject {
         }
     }
     
-    func addDeposit(amount: Double, to profile: SavingProfileObject) {
+    func addDeposit(amount: Double, to profile: SavingProfile) {
         do {
-            try service.addDeposit(amount: amount, to: profile)
-            loadData()
+            let objectId = try ObjectId(string: profile.id)
+            
+            if let managedProfile = realm.object(ofType: SavingProfileObject.self, forPrimaryKey: objectId) {
+                try service.addDeposit(amount: amount, to: managedProfile)
+                loadData()
+            }
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func addWithdrawal(amount: Double) {
+    func addWithdrawal(amount: Double, to profile: SavingProfile) {
         do {
-            try service.addWithdrawal(amount: amount)
-            loadData()
+            let objectId = try ObjectId(string: profile.id)
+            
+            if let manageProfile = realm.object(ofType: SavingProfileObject.self, forPrimaryKey: objectId) {
+                try service.addWithdrawal(amount: amount, to: manageProfile)
+                loadData()
+            }
         } catch {
             print(error.localizedDescription)
         }
@@ -72,10 +81,14 @@ class SavingsViewModel: ObservableObject {
         }
     }
     
-    func delete(_ item: SavingProfileObject) {
+    func delete(_ item: SavingProfile) {
         do {
-            try service.delete(id: item.id)
-            loadData()
+            let objectId = try ObjectId(string: item.id)
+            try service.delete(id: objectId)
+            
+            withAnimation {
+                loadData()
+            }
         } catch {
             print(error.localizedDescription)
         }

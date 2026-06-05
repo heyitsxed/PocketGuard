@@ -23,7 +23,7 @@ struct DetailView: View {
     
     let navigationTitle: String
     let image: UIImage?
-    let profile: SavingProfileObject
+    let profile: SavingProfile
     
     var progress: CGFloat {
         guard target > 0 else { return 0 }
@@ -110,7 +110,7 @@ struct DetailView: View {
                 }
             } else if isWithdrawAmount {
                 CenterAmountPopup(isPresented: $isWithdrawAmount) { withdrawAmount in
-                    vm.addWithdrawal(amount: withdrawAmount)
+                    vm.addWithdrawal(amount: withdrawAmount, to: profile)
                 }
             }
         }
