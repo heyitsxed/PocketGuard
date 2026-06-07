@@ -34,25 +34,25 @@ struct DetailView: View {
         ZStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    
-                    if let image = image {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 250)
-                            .frame(maxWidth: .infinity)
-                            .clipped()
-                            .padding(.horizontal)
-                    } else {
-                        Image("wallet-icon")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 250)
-                            .frame(maxWidth: .infinity)
-                            .clipped()
-                            .padding(.horizontal)
+                    GeometryReader { geo in
+                        let minY = geo.frame(in: .global).minY
+                        
+                        if let image = image {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: geo.size.width, height: geo.size.height + (minY > 0 ? minY : 0))
+                                .offset(y: minY > 0 ? -minY : 0)
+                        } else {
+                            Image("wallet-icon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: geo.size.width, height: geo.size.height + (minY > 0 ? minY : 0))
+                                .offset(y: minY > 0 ? -minY : 0)
+                        }
                     }
-                    
+                    .frame(height: 300)
+
                     VStack(spacing: 12) {
                         HStack {
                             Spacer()
@@ -108,6 +108,7 @@ struct DetailView: View {
                 }
                 .padding(.top)
             }
+            .ignoresSafeArea(edges: .top)
         }
         .overlay {
             if isAddAmount {
