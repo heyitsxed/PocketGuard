@@ -14,17 +14,38 @@ struct SavingsView: View {
     
     var body: some View {
         NavigationStack {
-            List(viewModel.profileObjects) { profile in
-                CustomProgressBarView(profile: profile)
-                .swipeActions(content: {
-                    Button(role: .destructive) {
-                        viewModel.delete(profile)
-                    } label: {
-                        Label(StringEnums.delete.rawValue, systemImage: "trash")
+            Group {
+                if viewModel.profileObjects.isEmpty {
+                    VStack(spacing: 16) {
+                        Spacer()
+
+                        Image("empty-state")
+                            .resizable()
+                            .scaledToFit()
+                        
+                        Text("Nothing saved yet. Let's start your saving journey!")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                        
+                        Spacer()
+                        Spacer()
                     }
-                })
+                } else {
+                    List(viewModel.profileObjects) { profile in
+                        CustomProgressBarView(profile: profile)
+                            .swipeActions(content: {
+                                Button(role: .destructive) {
+                                    viewModel.delete(profile)
+                                } label: {
+                                    Label(StringEnums.delete.rawValue, systemImage: "trash")
+                                }
+                            })
+                    }
+                    .listStyle(.insetGrouped)
+                }
             }
-            .listStyle(.insetGrouped)
             .navigationTitle(StringEnums.myGoals.rawValue)
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $isCreateNewGoal) {
@@ -37,8 +58,11 @@ struct SavingsView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Image(systemName: "plus")
-                        .onTapGesture { isCreateNewGoal = true }
+                    Button {
+                        isCreateNewGoal = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
             }
             .task { viewModel.loadData() }
