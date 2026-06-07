@@ -73,9 +73,9 @@ struct CustomProgressBarView: View {
         }
         .navigationDestination(isPresented: $isNavigate) {
             DetailView(
+                profile: profile,
                 navigationTitle: profile.name,
-                image: profile.image,
-                profile: profile
+                image: profile.image
             )
             .environmentObject(vm)
         }
