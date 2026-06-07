@@ -40,4 +40,7 @@ enum StringEnums: String {
     case withdrawn = "Withdrawn"
     case complete = "complete"
     case delete = "Delete"
+    
+    case noRecentTransactions = "No recent transactions"
+    case emptySavingState = "Nothing saved yet. Let's start your saving journey!"
 }

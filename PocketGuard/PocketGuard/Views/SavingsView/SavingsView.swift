@@ -23,7 +23,7 @@ struct SavingsView: View {
                             .resizable()
                             .scaledToFit()
                         
-                        Text("Nothing saved yet. Let's start your saving journey!")
+                        Text(StringEnums.emptySavingState.rawValue)
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)

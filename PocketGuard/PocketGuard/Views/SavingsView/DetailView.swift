@@ -91,14 +91,20 @@ struct DetailView: View {
                     }
                     .padding(.horizontal)
                     
-                    ForEach(Array(profile.transactions.prefix(5)), id: \.id) { tx in
-                        TransactionRow(tx: tx)
+                    if profile.transactions.isEmpty {
+                        Text(StringEnums.noRecentTransactions.rawValue)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        ForEach(Array(profile.transactions.prefix(5)), id: \.id) { tx in
+                            TransactionRow(tx: tx)
+                        }
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer(minLength: 20)
                     }
-                    .padding(.horizontal)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    
-                    Spacer(minLength: 20)
                 }
                 .padding(.top)
             }
