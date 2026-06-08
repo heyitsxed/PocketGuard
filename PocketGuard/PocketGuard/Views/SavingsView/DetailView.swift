@@ -12,6 +12,8 @@ struct DetailView: View {
     
     @State var isAddAmount: Bool = false
     @State var isWithdrawAmount: Bool = false
+    @State var isEditTapped: Bool = false
+    @Binding var path: [Route]
     
     let profile: SavingProfile
     let navigationTitle: String
@@ -33,26 +35,7 @@ struct DetailView: View {
     var body: some View {
         ZStack {
             ScrollView {
-                VStack(spacing: 20) {
-                    GeometryReader { geo in
-                        let minY = geo.frame(in: .global).minY
-                        
-                        if let image = image {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: geo.size.width, height: geo.size.height + (minY > 0 ? minY : 0))
-                                .offset(y: minY > 0 ? -minY : 0)
-                        } else {
-                            Image("wallet-icon")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: geo.size.width, height: geo.size.height + (minY > 0 ? minY : 0))
-                                .offset(y: minY > 0 ? -minY : 0)
-                        }
-                    }
-                    .frame(height: 300)
-
+                VStack {
                     VStack(spacing: 12) {
                         HStack {
                             Spacer()
@@ -76,7 +59,9 @@ struct DetailView: View {
                         onWithdraw: {
                             isWithdrawAmount = true
                         },
-                        onEdit: { }
+                        onEdit: {
+                            isEditTapped = true
+                        }
                     )
                     .padding(.horizontal)
                     
@@ -97,6 +82,7 @@ struct DetailView: View {
                             .foregroundColor(.secondary)
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top)
                     } else {
                         ForEach(Array(profile.transactions.prefix(5)), id: \.id) { tx in
                             TransactionRow(tx: tx)
@@ -108,7 +94,6 @@ struct DetailView: View {
                 }
                 .padding(.top)
             }
-            .ignoresSafeArea(edges: .top)
         }
         .overlay {
             if isAddAmount {
@@ -121,6 +106,71 @@ struct DetailView: View {
                 }
             }
         }
+        .sheet(isPresented: $isEditTapped) {
+            EditView(path: $path, profile: profile)
+                .environmentObject(vm)
+        }
         .navigationTitle(navigationTitle)
     }
 }
+
+
+struct EditView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var vm: SavingsViewModel
+    @Binding var path: [Route]
+    
+    let profile: SavingProfile
+    
+    @State private var isEditing: Bool = false
+    @State private var amount: Double = 0.0
+    
+    var body: some View {
+        VStack {
+            Form {
+                Section("Saving Info") {
+                    Text(profile.name)
+                }
+                
+                Section("Financial Details") {
+                    if isEditing {
+                        TextField("Amount", value: $amount, format: .currency(code: "PHP"))
+                            .keyboardType(.numberPad)
+                            .onSubmit {
+                                isEditing = false
+                            }
+                    } else {
+                        Text("₱\(Text(profile.amount, format: .number.precision(.fractionLength(2))))")
+                            .onTapGesture {
+                                amount = profile.amount
+                                isEditing = true
+                            }
+                    }
+                }
+                
+                Section("Target Date") {
+                    Text(profile.id)
+                }
+                
+                Button("Delete Goal") {
+                    vm.delete(profile)
+                    path.removeAll()
+                    dismiss()
+                }
+                .foregroundColor(.red)
+            }
+        }
+        .navigationTitle("Edit saving")
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                }
+            }
+        }
+    }
+}
+

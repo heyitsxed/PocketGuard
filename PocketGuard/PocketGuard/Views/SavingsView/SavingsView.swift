@@ -7,13 +7,20 @@
 
 import SwiftUI
 
+enum Route: Hashable {
+    case detail(SavingProfile)
+    case edit(SavingProfile)
+}
+
 struct SavingsView: View {
     @StateObject private var viewModel = SavingsViewModel()
     @State private var showDeleteAlert: Bool = false
     @State private var isCreateNewGoal: Bool = false
     
+    @State private var path: [Route] = []
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if viewModel.profileObjects.isEmpty {
                     VStack(spacing: 16) {
@@ -34,7 +41,7 @@ struct SavingsView: View {
                     }
                 } else {
                     List(viewModel.profileObjects) { profile in
-                        CustomProgressBarView(profile: profile)
+                        CustomProgressBarView(path: $path, profile: profile)
                             .swipeActions(content: {
                                 Button(role: .destructive) {
                                     viewModel.delete(profile)
@@ -42,6 +49,17 @@ struct SavingsView: View {
                                     Label(StringEnums.delete.rawValue, systemImage: "trash")
                                 }
                             })
+                    }
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .detail(let profile):
+                            DetailView(path: $path, profile: profile, navigationTitle: profile.name, image: profile.image)
+                                .environmentObject(viewModel)
+
+                        case .edit(let profile):
+                            EditView(path: $path, profile: profile)
+                                .environmentObject(viewModel)
+                        }
                     }
                     .listStyle(.insetGrouped)
                 }

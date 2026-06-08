@@ -19,7 +19,7 @@ class SavingProfileObject: Object {
     @Persisted var transactions = List<SavingTransaction>()
 }
 
-struct SavingProfile: Identifiable {
+struct SavingProfile: Identifiable, Hashable {
     let id: String
     let name: String
     let progress: Double
