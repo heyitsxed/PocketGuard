@@ -135,7 +135,6 @@ struct CreateGoalView: View {
                 
                 Section(StringEnums.targetDate.rawValue) {
                     DatePicker(StringEnums.setATargetDate.rawValue, selection: $selectedDate, displayedComponents: .date)
-                    
                 }
                 
                 HStack {
@@ -146,7 +145,7 @@ struct CreateGoalView: View {
                             return
                         }
                         
-                        vm.createGoal(name: name, amount: amount, saved: savedAmount, image: finalImage)
+                        vm.createGoal(name: name, amount: amount, saved: savedAmount, image: finalImage, date: selectedDate)
                         dismiss()
                     }
                     .foregroundColor(.blue)

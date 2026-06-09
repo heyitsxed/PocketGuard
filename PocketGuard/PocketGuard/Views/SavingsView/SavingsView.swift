@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-enum Route: Hashable {
-    case detail(SavingProfile)
-    case edit(SavingProfile)
-}
-
 struct SavingsView: View {
     @StateObject private var viewModel = SavingsViewModel()
     @State private var showDeleteAlert: Bool = false
@@ -25,7 +20,7 @@ struct SavingsView: View {
                 if viewModel.profileObjects.isEmpty {
                     VStack(spacing: 16) {
                         Spacer()
-
+                        
                         Image("empty-state")
                             .resizable()
                             .scaledToFit()
@@ -50,22 +45,25 @@ struct SavingsView: View {
                                 }
                             })
                     }
-                    .navigationDestination(for: Route.self) { route in
-                        switch route {
-                        case .detail(let profile):
-                            DetailView(path: $path, profile: profile, navigationTitle: profile.name, image: profile.image)
-                                .environmentObject(viewModel)
-
-                        case .edit(let profile):
-                            EditView(path: $path, profile: profile)
-                                .environmentObject(viewModel)
-                        }
-                    }
                     .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle(StringEnums.myGoals.rawValue)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .detail(let id):
+                    if let profile = viewModel.profileObjects.first(where: { $0.id == id }) {
+                        DetailView(path: $path, profile: profile, navigationTitle: profile.name, image: profile.image)
+                            .environmentObject(viewModel)
+                    }
+                case .edit(let id):
+                    if let profile = viewModel.profileObjects.first(where: { $0.id == id }) {
+                        EditView(path: $path, profile: profile)
+                            .environmentObject(viewModel)
+                    }
+                }
+            }
             .fullScreenCover(isPresented: $isCreateNewGoal) {
                 CreateGoalView(
                     name: "",

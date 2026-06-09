@@ -43,4 +43,8 @@ enum StringEnums: String {
     
     case noRecentTransactions = "No recent transactions"
     case emptySavingState = "Nothing saved yet. Let's start your saving journey!"
+    case savingInfo = "Saving Info"
+    case amount = "Amount"
+    case deleteGoal = "Delete Goal"
+    case editSaving = "Edit saving"
 }

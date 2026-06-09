@@ -38,12 +38,13 @@ final class TransactionService {
         }
     }
     
-    func createProfile(name: String, amount: Double, saved: Double, image: UIImage?) throws {
+    func createProfile(name: String, amount: Double, saved: Double, image: UIImage?, date: Date) throws {
         let object = SavingProfileObject()
         object.name = name
         object.amount = amount
         object.saved = saved
         object.imageData = image?.jpegData(compressionQuality: 0.8)
+        object.date = date
         
         try realm.write {
             realm.add(object)

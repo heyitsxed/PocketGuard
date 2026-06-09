@@ -51,9 +51,9 @@ class SavingsViewModel: ObservableObject {
         }
     }
     
-    func createGoal(name: String, amount: Double, saved: Double, image: UIImage?) {
+    func createGoal(name: String, amount: Double, saved: Double, image: UIImage?, date: Date) {
         do {
-            try service.createProfile(name: name, amount: amount, saved: saved, image: image)
+            try service.createProfile(name: name, amount: amount, saved: saved, image: image, date: date)
             loadData()
         } catch {
             print(error.localizedDescription)

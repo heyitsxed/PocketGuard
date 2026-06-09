@@ -17,8 +17,9 @@ struct CustomProgressBarView: View {
     let profile: SavingProfile
     
     var progress: Double {
-        guard profile.amount > 0 else { return 0 }
-        return profile.saved / profile.amount
+        guard profile.amount > 0 else { return 0.0 }
+        let rawProgress = profile.saved / profile.amount
+        return min(max(0.0, rawProgress), 1.0)
     }
     
     var body: some View {
@@ -69,8 +70,7 @@ struct CustomProgressBarView: View {
             
         }.onTapGesture {
             isNavigate = true
-            path.append(.detail(profile))
+            path.append(.detail(profile.id))
         }
-        
     }
 }
