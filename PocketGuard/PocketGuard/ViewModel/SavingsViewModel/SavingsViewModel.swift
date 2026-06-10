@@ -20,6 +20,14 @@ class SavingsViewModel: ObservableObject {
     
     private let service = TransactionService()
     
+    var totalAmount: Double {
+        profileObjects.reduce(0) { $0 + $1.amount }
+    }
+    
+    var totalSaved: Double {
+        profileObjects.reduce(0) { $0 + $1.saved }
+    }
+    
     func loadData() {
         let objects = service.fetchProfiles()
         profileObjects = objects.map { SavingProfile(object: $0) }

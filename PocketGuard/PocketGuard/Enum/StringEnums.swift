@@ -18,7 +18,6 @@ enum StringEnums: String {
     case hideAmount = "₱ ******"
     
     case addGoal = "add Goal"
-    case myGoals = "My Pocket List"
     case edit = "Edit"
     case growYourSavings = "Grow Your Savings"
     case enterSavingName = "Enter saving name"
@@ -47,4 +46,10 @@ enum StringEnums: String {
     case amount = "Amount"
     case deleteGoal = "Delete Goal"
     case editSaving = "Edit saving"
+    
+    case totalSaved = "Total Saved"
+    case maskBalance = "₱********"
+    case maskBalanceProgress = "of ₱********"
+    case trackYourGoals = "Track your active savings, reach your goals."
+    case myPocketList = "My Pocket List"
 }
