@@ -18,6 +18,7 @@ class SavingProfileObject: Object {
     @Persisted var imageData: Data?
     @Persisted var transactions = List<SavingTransaction>()
     @Persisted var date = Date()
+    @Persisted var createdAt = Date()
 }
 
 struct SavingProfile: Identifiable, Hashable {
@@ -29,6 +30,7 @@ struct SavingProfile: Identifiable, Hashable {
     let image: UIImage?
     let transactions: [SavingTransaction]
     let date: Date
+    let createdAt: Date
 }
 
 extension SavingProfile {
@@ -41,5 +43,6 @@ extension SavingProfile {
         self.image = object.imageData.flatMap { UIImage(data: $0) }
         self.transactions = object.transactions.sorted(by: { $0.createdAt > $1.createdAt })
         self.date = object.date
+        self.createdAt = object.createdAt
     }
 }

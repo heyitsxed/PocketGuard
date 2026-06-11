@@ -14,30 +14,27 @@ struct ActionButtonsView: View {
     var onEdit: () -> Void
     
     var body: some View {
-        HStack(spacing: 4) {
-            
-            Button(action: onAdd) {
-                Label("Add", systemImage: "plus")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-            
-            Button(action: onWithdraw) {
-                Label("Minus", systemImage: "minus")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            
-            Button(action: onEdit) {
-                Label("Edit", systemImage: "pencil")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
+        HStack(spacing: 8) {
+            Group {
+                Button(action: onAdd) {
+                    Label("Add Money", systemImage: "plus")
+                }
+                .buttonStyle(.borderedProminent)
                 
+                Button(action: onWithdraw) {
+                    Label("Withdraw", systemImage: "minus")
+                }
+                .buttonStyle(.bordered)
+                
+                Button(action: onEdit) {
+                    Label("Edit Goal", systemImage: "pencil")
+                }
+                .buttonStyle(.bordered)
             }
-            .buttonStyle(.bordered)
+            .font(.footnote)
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
+            .frame(maxWidth: .infinity)
         }
-        .padding()
     }
 }

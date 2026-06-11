@@ -52,4 +52,8 @@ enum StringEnums: String {
     case maskBalanceProgress = "of ₱********"
     case trackYourGoals = "Track your active savings, reach your goals."
     case myPocketList = "My Pocket List"
+    
+    case savedAmount = "Saved Amount"
+    case createdOn = "Created On"
+    case dailyGoal = "Daily Goal"
 }
