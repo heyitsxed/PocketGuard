@@ -103,7 +103,8 @@ struct DetailView: View {
                     ForEach(Array(profile.transactions.prefix(5)), id: \.id) { tx in
                         TransactionRow(tx: tx)
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 5)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     Spacer(minLength: 20)
                 }

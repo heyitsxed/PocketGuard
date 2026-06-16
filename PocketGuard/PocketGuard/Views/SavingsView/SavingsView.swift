@@ -52,30 +52,43 @@ struct SavingsView: View {
     
     // MARK: - Subviews
     
-    private var emptyStateView: some View {
-        VStack(spacing: 16) {
+    public var emptyStateView: some View {
+        VStack(spacing: 24) {
             Spacer()
             
             Image("empty-state")
                 .resizable()
                 .scaledToFit()
+                .frame(height: 260)
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
+                .padding(.horizontal, 24)
             
-            Text(StringEnums.emptySavingState.rawValue)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-            
-            Spacer()
-            Spacer()
-            
-            HStack {
-                Spacer()
-                plusButton(iconSize: 24, paddingAmount: 16)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 20)
+            VStack(spacing: 8) {
+                Text(StringEnums.emptySavingState.rawValue.highlighting("saving journey!", with: .green))
+                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                
+                Text(StringEnums.emptySavingStateSubTitle.rawValue)
+                    .font(.system(size: 14, weight: .medium))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 40)
+                    .lineSpacing(3)
             }
+            .padding(.bottom, 8)
+            
+            goalMetricsSummaryView
+                .padding(.horizontal, 4)
+            
+            goalButtonView
+            
+            Spacer()
         }
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
     }
     
     private var dashboardContentView: some View {
@@ -93,8 +106,6 @@ struct SavingsView: View {
                 }
                 
                 Spacer()
-                
-                plusButton(iconSize: 20, paddingAmount: 10)
             }
             .padding(.horizontal, 15)
             .padding(.top, 16)
@@ -134,24 +145,78 @@ struct SavingsView: View {
         }
     }
     
+    private var goalMetricsSummaryView: some View {
+        ZStack {
+            Color.white
+                .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
+
+            HStack {
+                Spacer()
+                
+                VStack(spacing: 5) {
+                    Image(systemName: "target").foregroundColor(.green)
+                    Text(StringEnums.setYourGoals.rawValue).font(.system(size: 11, weight: .semibold))
+                    Text(StringEnums.planWhatToAchieve.rawValue)
+                        .font(.system(size: 9))
+                        .multilineTextAlignment(.center)
+                }
+                
+                Spacer()
+                Divider().frame(height: 50)
+                Spacer()
+                
+                VStack(spacing: 5) {
+                    Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
+                    Text(StringEnums.saveConsistency.rawValue).font(.system(size: 11, weight: .semibold))
+                    Text(StringEnums.smallStepsToday.rawValue)
+                        .font(.system(size: 9))
+                        .multilineTextAlignment(.center)
+                }
+                
+                Spacer()
+                Divider().frame(height: 50)
+                Spacer()
+                
+                VStack(spacing: 5) {
+                    Image(systemName: "chart.bar").foregroundColor(.green)
+                    Text(StringEnums.buildYourFuture.rawValue).font(.system(size: 11, weight: .semibold))
+                    Text(StringEnums.secureYourDreams.rawValue)
+                        .font(.system(size: 9))
+                        .multilineTextAlignment(.center)
+                    
+                }
+                
+                Spacer()
+            }
+        }
+        .frame(height: 100)
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .padding(.horizontal, 15)
+        .padding(.bottom, 15)
+    }
+    
     // MARK: - Helper Builder Functions
     
-    private func plusButton(iconSize: CGFloat, paddingAmount: CGFloat) -> some View {
+    private var goalButtonView: some View {
         Button {
             isCreateNewGoal = true
         } label: {
-            Image(systemName: "plus")
-                .font(.system(size: iconSize, weight: .bold))
-                .foregroundColor(.white)
-                .padding(paddingAmount)
-                .background(
-                    LinearGradient(
-                        colors: [Color.blue.opacity(0.9), Color.indigo],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .clipShape(Circle())
+            HStack {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+                    .font(Font.system(size: 14, weight: .bold, design: .default))
+                
+                Text(StringEnums.createYourFirstPocket.rawValue)
+                    .foregroundColor(.white)
+                    .font(Font.system(size: 14, weight: .bold, design: .default))
+            }
+            
         }
+        .padding()
+        .frame(height: 40)
+        .frame(maxWidth: .infinity)
+        .background(Color.green)
+        .cornerRadius(20)
+        .padding(.horizontal, 15)
     }
 }

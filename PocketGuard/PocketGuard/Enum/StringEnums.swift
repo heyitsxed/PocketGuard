@@ -56,4 +56,13 @@ enum StringEnums: String {
     case savedAmount = "Saved Amount"
     case createdOn = "Created On"
     case dailyGoal = "Daily Goal"
+    
+    case emptySavingStateSubTitle = "Create your first pocket and take the first step towards your financial goals."
+    case setYourGoals = "Set your goals"
+    case planWhatToAchieve = "Plan what you want to achieve"
+    case saveConsistency = "Save consistently"
+    case smallStepsToday = "Small steps today, big impact tommorow"
+    case buildYourFuture = "Build your future"
+    case secureYourDreams = "Secure your dreams one peso at a time"
+    case createYourFirstPocket = "Create Your First Pocket"
 }
