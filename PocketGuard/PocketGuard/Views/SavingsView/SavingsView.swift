@@ -106,6 +106,8 @@ struct SavingsView: View {
                 }
                 
                 Spacer()
+                
+                plusButton(iconSize: 20, paddingAmount: 10)
             }
             .padding(.horizontal, 15)
             .padding(.top, 16)
@@ -149,7 +151,7 @@ struct SavingsView: View {
         ZStack {
             Color.white
                 .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
-
+            
             HStack {
                 Spacer()
                 
@@ -183,7 +185,6 @@ struct SavingsView: View {
                     Text(StringEnums.secureYourDreams.rawValue)
                         .font(.system(size: 9))
                         .multilineTextAlignment(.center)
-                    
                 }
                 
                 Spacer()
@@ -210,7 +211,6 @@ struct SavingsView: View {
                     .foregroundColor(.white)
                     .font(Font.system(size: 14, weight: .bold, design: .default))
             }
-            
         }
         .padding()
         .frame(height: 40)
@@ -218,5 +218,26 @@ struct SavingsView: View {
         .background(Color.green)
         .cornerRadius(20)
         .padding(.horizontal, 15)
+    }
+    
+    private func plusButton(iconSize: CGFloat, paddingAmount: CGFloat) -> some View {
+        Button {
+            isCreateNewGoal = true
+        } label: {
+            Image(systemName: "plus")
+                .font(.system(size: iconSize, weight: .bold))
+                .foregroundColor(.white)
+                .padding(paddingAmount)
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.blue.opacity(0.9),
+                            Color.indigo
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing)
+                )
+                .clipShape(Circle())
+        }
     }
 }
