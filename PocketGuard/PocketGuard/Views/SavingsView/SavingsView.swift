@@ -30,11 +30,6 @@ struct SavingsView: View {
                         DetailView(path: $path, profile: profile, navigationTitle: profile.name, image: profile.image)
                             .environmentObject(viewModel)
                     }
-                case .edit(let id):
-                    if let profile = viewModel.profileObjects.first(where: { $0.id == id }) {
-                        EditView(path: $path, profile: profile)
-                            .environmentObject(viewModel)
-                    }
                 }
             }
             .fullScreenCover(isPresented: $isCreateNewGoal) {

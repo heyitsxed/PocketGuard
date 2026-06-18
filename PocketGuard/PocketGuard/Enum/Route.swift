@@ -7,5 +7,4 @@
 
 enum Route: Hashable {
     case detail(String)
-    case edit(String)
 }

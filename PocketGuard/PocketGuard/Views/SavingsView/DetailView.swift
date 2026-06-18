@@ -51,6 +51,15 @@ struct DetailView: View {
         return remainingAmount / Double(daysRemaining)
     }
     
+    var daysRemainingText: String {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: calendar.startOfDay(for: .now), to: calendar.startOfDay(for: profile.date))
+        
+        let days = components.day ?? 0
+        return days >= 0 ? "\(days) days left" : "\(abs(days)) days overdue"
+    }
+
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -123,8 +132,12 @@ struct DetailView: View {
             }
         }
         .sheet(isPresented: $isEditTapped) {
-            EditView(path: $path, profile: profile)
-                .environmentObject(vm)
+            EditView(
+                path: $path,
+                profile: profile,
+                dailyGoal: dailyGoal,
+                remainingDays: daysRemainingText,
+                progress: progress).environmentObject(vm)
         }
         .navigationTitle(navigationTitle)
     }
