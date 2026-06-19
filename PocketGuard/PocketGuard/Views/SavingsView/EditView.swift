@@ -12,8 +12,9 @@ struct EditView: View {
     @EnvironmentObject var vm: SavingsViewModel
     @Binding var path: [Route]
     
-    @State private var isEditing: Bool = false
+    @State private var name: String = ""
     @State private var amount: Double = 0.0
+    @State private var targetDate: Date = Date()
     
     let profile: SavingProfile
     let dailyGoal: Double
@@ -21,133 +22,214 @@ struct EditView: View {
     let progress: CGFloat
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background(
-                            LinearGradient(
-                                colors: [.blue, .indigo],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .clipShape(Circle())
-                        .shadow(color: .indigo.opacity(0.3), radius: 4, x: 0, y: 2)
-                }
-                
-                Spacer()
-                
-                VStack(spacing: 4) {
-                    Text("Edit Saving Goal")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    
-                    Text("Update your goal details and stay on track")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity)
-                
-                Spacer()
-                
-                Color.clear
-                    .frame(width: 34, height: 34)
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
-            .background(Color(.systemBackground))
+        VStack {
+            headerView.frame(height: 60)
             
-            Form {
-                Section {
-                    Text(profile.name)
-                        .font(.body)
-                        .padding(.vertical, 2)
-                } header: {
-                    sectionHeader(title: "Saving Name", subtitle: "Give your saving name.", systemIcon: "tag")
-                }
-                
-                Section {
-                    let amount = profile.amount
-                    Text("₱\(amount, format: .number.precision(.fractionLength(2)))")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .padding(.vertical, 2)
-                } header: {
-                    sectionHeader(title: "Goal Amount", subtitle: "How much do you want to save?", systemIcon: "pesosign.circle.fill")
-                }
-                
-                Section {
-                    Text(profile.date, style: .date)
-                        .font(.body)
-                        .padding(.vertical, 2)
-                } header: {
-                    sectionHeader(title: "Target Date", subtitle: "When do you want to reach your goal?", systemIcon: "calendar")
-                }
-                
-                goalMetricsSummaryView
-                
-                Section {
-                    Button(role: .destructive) {
-                        vm.delete(profile)
-                        path.removeAll()
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Text(StringEnums.deleteGoal.rawValue)
-                                .fontWeight(.medium)
-                            
-                            Spacer()
-                        }
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    Image(systemName: "tag")
+                        .font(.system(size: 19, weight: .medium))
+                        .foregroundStyle(.green)
+                        .frame(width: 24, height: 24)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(StringEnums.savingName.rawValue)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.black)
+                        
+                        Text(StringEnums.savingNameSubtitle.rawValue)
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(.black)
                     }
                 }
+                .padding(.horizontal, 15)
+                
+                customCard {
+                    TextField(StringEnums.enterName.rawValue, text: $name)
+                }
+            }.padding(.vertical, 5)
+            
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    Image(systemName: "target")
+                        .font(.system(size: 19, weight: .medium))
+                        .foregroundStyle(.green)
+                        .frame(width: 24, height: 24)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(StringEnums.goalAmount.rawValue)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.black)
+                        
+                        Text(StringEnums.goalNameSubtitle.rawValue)
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(.black)
+                    }
+                }
+                .padding(.horizontal, 15)
+                
+                customCard {
+                    TextField(StringEnums.enterAmount.rawValue, value: $amount, format: .number)
+                        .keyboardType(.decimalPad)
+                }
+            }.padding(.vertical, 5)
+            
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 19, weight: .medium))
+                        .foregroundStyle(.green)
+                        .frame(width: 24, height: 24)
+                    
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(StringEnums.targetDate.rawValue)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.black)
+                        
+                        Text(StringEnums.targetDateSubtitle.rawValue)
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(.black)
+                    }
+                }
+                .padding(.horizontal, 15)
+                
+                customCard {
+                    HStack {
+                        Text(StringEnums.changeDate.rawValue)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.black)
+                        
+                        Spacer()
+                        
+                        DatePicker("", selection: $targetDate, displayedComponents: .date)
+                            .labelsHidden()
+                    }
+                }
+            }.padding(.vertical, 5)
+            
+            
+            goalMetricsSummaryView
+            
+            Spacer()
+            
+            Button {
+                saveChanges()
+            } label: {
+                Text(StringEnums.saveChanges.rawValue)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .padding(.horizontal, 15)
+            
+            Button(role: .destructive) {
+                vm.delete(profile)
+                path.removeAll()
+                dismiss()
+            } label: {
+                Text(StringEnums.deleteGoal.rawValue)
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.red.opacity(0.8))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .padding(.horizontal, 15)
+        }
+        .onAppear {
+            setupInitialValues()
         }
     }
-    
-    @ViewBuilder
-    private func sectionHeader(title: String, subtitle: String, systemIcon: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: systemIcon)
-                .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(.green)
-                .frame(width: 24, height: 24)
+}
+
+private extension EditView {
+    var headerView: some View {
+        HStack {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding(10)
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .indigo],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .clipShape(Circle())
+            }
             
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.black)
+            Spacer()
+            
+            VStack(spacing: 4) {
+                Text(StringEnums.editSavingGoal.rawValue)
+                    .font(.headline)
                 
-                Text(subtitle)
-                    .font(.caption2)
+                Text(StringEnums.editSavingGoalSubtitle.rawValue)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            
+            Spacer()
+            
+            Color.clear.frame(width: 34)
         }
-        .padding(.leading, -4)
-        .textCase(nil)
+        .padding()
+        .background(Color.white)
     }
     
-    private var goalMetricsSummaryView: some View {
+    func setupInitialValues() {
+        name = profile.name
+        amount = profile.amount
+        targetDate = profile.date
+    }
+    
+    func saveChanges() {
+        // You MUST implement this in your VM properly
+        //        vm.update(
+        //            profile: profile,
+        //            name: name,
+        //            amount: amount,
+        //            date: targetDate
+        //        )
+        
+        dismiss()
+    }
+}
+
+private extension EditView {
+    func customCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading) {
+            content()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .frame(height: 60)
+        .background(Color(.white))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 15)
+        .shadow(color: Color.black.opacity(0.2), radius: 16, x: 0, y: 8)
+        .padding(.vertical, 5)
+    }
+    
+    var goalMetricsSummaryView: some View {
         ZStack {
             Color.white
-                .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
+                .shadow(color: .black.opacity(0.06), radius: 16, x: 0, y: 8)
             
             HStack {
                 Spacer()
                 
                 VStack(spacing: 5) {
                     Image(systemName: "target").foregroundColor(.green)
-                    Text("Daily Needed").font(.system(size: 11, weight: .semibold))
-                    Text(dailyGoal, format: .currency(code: "PHP")).font(.system(size: 9, weight: .semibold))
-                        .multilineTextAlignment(.center)
+                    Text(StringEnums.dailyNeeded.rawValue).font(.system(size: 11, weight: .semibold))
+                    Text(dailyGoal, format: .currency(code: "PHP"))
+                        .font(.system(size: 9))
                 }
                 
                 Spacer()
@@ -156,10 +238,9 @@ struct EditView: View {
                 
                 VStack(spacing: 5) {
                     Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
-                    Text("Time Left").font(.system(size: 11, weight: .semibold))
+                    Text(StringEnums.timeLeft.rawValue).font(.system(size: 11, weight: .semibold))
                     Text(remainingDays)
                         .font(.system(size: 9))
-                        .multilineTextAlignment(.center)
                 }
                 
                 Spacer()
@@ -168,18 +249,17 @@ struct EditView: View {
                 
                 VStack(spacing: 5) {
                     Image(systemName: "chart.bar").foregroundColor(.green)
-                    Text("Goal Progress").font(.system(size: 11, weight: .semibold))
-                    Text("\(Text(progress * 100, format: .number.precision(.fractionLength(2))))%")
+                    Text(StringEnums.goalProgress.rawValue).font(.system(size: 11, weight: .semibold))
+                    Text("\(progress * 100, specifier: "%.2f")%")
                         .font(.system(size: 9))
-                        .multilineTextAlignment(.center)
                 }
                 
                 Spacer()
             }
         }
-        .frame(height: 60)
+        .frame(height: 70)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal, 15)
-        .padding(.bottom, 15)
+        .shadow(color: Color.black.opacity(0.2), radius: 16, x: 0, y: 8)
     }
 }

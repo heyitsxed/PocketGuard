@@ -65,4 +65,17 @@ enum StringEnums: String {
     case buildYourFuture = "Build your future"
     case secureYourDreams = "Secure your dreams one peso at a time"
     case createYourFirstPocket = "Create Your First Pocket"
+    
+    case savingName = "Saving Name"
+    case savingNameSubtitle = "Give your saving name"
+    case enterName = "Enter name"
+    case goalNameSubtitle = "How much do you want to save?"
+    case targetDateSubtitle = "When do you want to reach your goal?"
+    case changeDate = "Change Date"
+    case saveChanges = "Save Changes"
+    case editSavingGoal = "Edit Saving Goal"
+    case editSavingGoalSubtitle = "Update your goal details and stay on track"
+    case dailyNeeded = "Daily Needed"
+    case timeLeft = "Time Left"
+    case goalProgress = "Goal Progress"
 }
