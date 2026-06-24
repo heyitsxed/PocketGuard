@@ -62,4 +62,14 @@ final class TransactionService {
             realm.delete(obj)
         }
     }
+    
+    func updateProfile(id: ObjectId, name: String, amount: Double, date: Date) {
+        if let object = realm.object(ofType: SavingProfileObject.self, forPrimaryKey: id) {
+            try! realm.write {
+                object.name = name
+                object.amount = amount
+                object.date = date
+            }
+        }
+    }
 }

@@ -80,4 +80,13 @@ class SavingsViewModel: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    func update(profile: SavingProfile, name: String, amount: Double, date: Date) {
+        do {
+            try service.updateProfile(id: ObjectId(string: profile.id), name: name, amount: amount, date: date)
+            loadData()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }

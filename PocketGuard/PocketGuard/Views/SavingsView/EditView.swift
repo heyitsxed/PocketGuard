@@ -190,14 +190,12 @@ private extension EditView {
     }
     
     func saveChanges() {
-        // You MUST implement this in your VM properly
-        //        vm.update(
-        //            profile: profile,
-        //            name: name,
-        //            amount: amount,
-        //            date: targetDate
-        //        )
-        
+        vm.update(
+            profile: profile,
+            name: name,
+            amount: amount,
+            date: targetDate
+        )
         dismiss()
     }
 }
