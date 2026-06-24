@@ -1,0 +1,91 @@
+//
+//  HomePageView.swift
+//  PocketGuard
+//
+//  Created by Cedrick  on 4/13/26.
+//
+
+import SwiftUI
+
+struct HomePageView: View {
+    @ObservedObject private var viewModel = HomePageViewModel()
+    
+    var body: some View {
+        ZStack {
+            VStack(spacing: 10) {
+                Text(StringEnums.appTitle.rawValue)
+                    .font(.title)
+                    .fontWeight(.semibold)
+                
+                ZStack {
+                    Color.blue
+                        .frame(height: 130)
+                    
+                    VStack(spacing: 10) {
+                        Text(StringEnums.netWorth.rawValue)
+                            .foregroundColor(.white)
+                        
+                        Text(viewModel.isAmountHidden ? StringEnums.hideAmount.rawValue : "₱ \(String(format: "%.2f", viewModel.amounts.reduce(0, +)))")
+                            .foregroundColor(.white)
+                            .font(.system(size: 30, weight: .bold))
+                    }
+                }
+                .cornerRadius(20)
+                .padding(.horizontal, 15)
+                .overlay(alignment: .topTrailing) {
+                    Image(systemName: viewModel.isAmountHidden ? "eye.slash.fill" : "eye.fill")
+                        .foregroundColor(.white)
+                        .font(.system(size: 20))
+                        .padding(.trailing, 30)
+                        .padding(.top, 15)
+                        .onTapGesture {
+                            viewModel.isAmountHidden.toggle()
+                        }
+                }
+                
+                ScrollView {
+                    LazyVGrid(columns: viewModel.columns, spacing: 10) {
+                        ForEach(viewModel.amounts.indices, id: \.self) { index in
+                            CardView(isAmountHidden: viewModel.isAmountHidden, amount: viewModel.amounts[index]) {
+                                viewModel.selectedIndex = nil
+                            }
+                            .overlay(alignment: .topTrailing) {
+                                if viewModel.selectedIndex == index {
+                                    Button {
+                                        viewModel.amounts.remove(at: index)
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.red)
+                                            .font(.system(size: 24))
+                                            .padding(5)
+                                    }
+                                }
+                            }
+                            .onLongPressGesture {
+                                viewModel.selectedIndex = index
+                            }
+                        }
+                        
+                        AddCardView {
+                            withAnimation {
+                                viewModel.isShowPopup = true
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 15)
+                }
+                Spacer()
+            }
+            
+            if viewModel.isShowPopup {
+                CenterAmountPopup(isPresented: $viewModel.isShowPopup) { amount in
+                    viewModel.amounts.append(amount)
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    HomePageView()
+}
